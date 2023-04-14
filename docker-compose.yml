@@ -1,0 +1,61 @@
+version: '3.8'
+services:
+  adapter:
+    build:
+      context: ./adapter
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBIT_HOST: rabbitmq
+      RABBIT_USERNAME: sensor_user_rabbit
+      RABBIT_PASSWORD: sensor_password_rabbit
+    links:
+      - rabbitmq
+    networks:
+      - postgres-network
+
+  simulated-collector:
+    build:
+      context: ./simulated_collector
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - rabbitmq
+    environment:
+      SENSOR_IDS: '1,2,3,4,5,6'
+      RABBIT_HOST: rabbitmq
+      RABBIT_USERNAME: ies_grupo33
+      RABBIT_PASSWORD: rabbitmq_grupo33
+    links:
+      - rabbitmq
+    networks:
+      - data-stream-network
+
+  rabbitmq:
+    image: 'rabbitmq:3.8-management-alpine'
+    container_name: 'sensor_rabbitmq'
+    environment:
+      RABBITMQ_USERNAME: sensor_user_rabbit
+      RABBITMQ_PASSWORD: sensor_password_rabbit
+      RABBITMQ_NODE_TYPE: queue-disc
+      RABBITMQ_NODE_NAME: rabbit@rabbitmq
+      RABBITMQ_ERL_COOKIE: s3cr3tc00ki3
+    ports:
+      - '4369:4369'
+      - '5672:5672'
+      - '25672:25672'
+      - '15672:15672'
+    volumes:
+      - 'rabbitmq_data:/rabbitmq'
+    networks:
+      - data-stream-network
+
+networks:
+  data-stream-network:
+    driver: "bridge"
+
+volumes:
+  rabbitmq_data:
+    driver: local
