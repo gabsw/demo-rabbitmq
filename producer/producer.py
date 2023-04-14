@@ -18,7 +18,7 @@ def random_jitter(value, minimum, maximum, step=0.1):
     else:
         return new_value
 
-def get_rabbit_conn_and_channel(host, username, password, queue='task_queue'):
+def get_rabbit_conn_and_channel(host, username, password, queue='sensor_queue'):
     credentials = pika.PlainCredentials(username, password)
     parameters = pika.ConnectionParameters(host, 5672, '/', credentials)
 
@@ -33,7 +33,7 @@ def close_rabbit_connection(connection_):
     connection_.close()
 
 
-def send_message(channel_, message, queue='task_queue'):
+def send_message(channel_, message, queue='sensor_queue'):
     channel_.basic_publish(exchange='', routing_key=queue, body=json.dumps(message),
                            properties=pika.BasicProperties(delivery_mode=2))  # make message persistent
 

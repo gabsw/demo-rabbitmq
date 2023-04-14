@@ -33,18 +33,14 @@ services:
     networks:
       - data-stream-network
 
+
   rabbitmq:
     image: 'bitnami/rabbitmq:latest'
     environment:
       RABBITMQ_USERNAME: sensor_user_rabbit
       RABBITMQ_PASSWORD: sensor_password_rabbit
-      RABBITMQ_NODE_TYPE: queue-disc
-      RABBITMQ_NODE_NAME: rabbit@rabbitmq
-      RABBITMQ_ERL_COOKIE: s3cr3tc00ki3
     ports:
-      - '4369:4369'
       - '5672:5672'
-      - '25672:25672'
       - '15672:15672'
     volumes:
       - 'rabbitmq_data:/bitnami'

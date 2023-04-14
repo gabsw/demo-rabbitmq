@@ -29,9 +29,9 @@ while True:
         connection = pika.BlockingConnection(parameters)
 
         channel = connection.channel()
-        channel.queue_declare(queue='task_queue', durable=True)  # Avoid losing messages during crashes
+        channel.queue_declare(queue='sensor_queue', durable=True)  # Avoid losing messages during crashes
         channel.basic_qos(prefetch_count=1)  # Do not give more than one message to a worker at a time
-        channel.basic_consume(queue='task_queue', on_message_callback=callback)
+        channel.basic_consume(queue='sensor_queue', on_message_callback=callback)
 
         try:
             channel.start_consuming()
