@@ -5,4 +5,4 @@ RUN pip install --no-cache-dir pika psycopg2
 
 COPY . .
 
-CMD [ "python", "./adapter.py" ]
+CMD [ "python", "./consumer.py" ]
