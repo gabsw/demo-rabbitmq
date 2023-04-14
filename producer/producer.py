@@ -34,8 +34,6 @@ def close_rabbit_connection(connection_):
 
 
 def send_message(channel_, message, queue='task_queue'):
-    #channel_.queue_declare(queue='task_queue')
-
     channel_.basic_publish(exchange='', routing_key=queue, body=json.dumps(message),
                            properties=pika.BasicProperties(delivery_mode=2))  # make message persistent
 
@@ -81,6 +79,6 @@ try:
                 send_message(channel, sensor)
 
             # Offset between data
-            time.sleep(60)
+            time.sleep(1)
 except KeyboardInterrupt:
     pass
